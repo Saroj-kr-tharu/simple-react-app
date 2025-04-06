@@ -1,4 +1,19 @@
-name: Hello World workflow
+# name: Hello World workflow
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+# jobs:
+#   say_hello:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Print Hello World
+#         run: echo "Hello, World"
+
+
+name: Deploy to Vercel
 
 on:
   push:
@@ -6,8 +21,29 @@ on:
       - main
 
 jobs:
-  say_hello:
+  build_and_deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Print Hello World
-        run: echo "Hello, World"
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          alias-domain: domain.com
+          working-directory: ./
+          vercel-args: '--prod'
