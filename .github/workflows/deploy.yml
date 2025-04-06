@@ -15,10 +15,13 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '18' # Updated to Node.js 18
+          node-version: '16'
 
       - name: Install dependencies
         run: npm install
+
+      - name: Install polyfill
+        run: npm install node-polyfill-webpack-plugin --save-dev
 
       - name: Build
         run: npm run build
